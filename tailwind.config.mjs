@@ -8,8 +8,12 @@ export default {
   theme: {
     extend: {
       colors: {
+        primary: "#7044EE",
         background: "var(--background)",
         foreground: "var(--foreground)",
+      },
+      fontFamily: {
+        roboto: ['Roboto', 'sans-serif'], // Define the Roboto font family
       },
     },
   },
