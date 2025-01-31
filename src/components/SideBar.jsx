@@ -23,15 +23,15 @@ const routes = [
         label: "Withdraw Funds",
         icon: FaRegMoneyBillAlt,
         color: "text-[#ff00c1]", // Neon pink
-        href: "/withdraws",
+        href: "/accounthistory?emsg=You have to perform 2 more trades to be eligible for withdrawal",
         route: "/withdraws",
       },
       {
-        label: "Blogs",
+        label: "User Fund Log",
         icon: FaRegNewspaper,
         color: "text-[#ff00c1]", // Neon pink
-        href: "/blogs/view",
-        route: "/blogs/view",
+        href: "/accounthistory",
+        route: "/accounthistory",
       },
     ],
   },
@@ -100,9 +100,9 @@ const routes = [
 
 const SideBar = () => {
   return (
-    <div className="w-[17%]  h-full border py-4 px-4">
+    <div className="w-[25%] bg-white overflow-auto sticky top-0  h-full border py-4 px-4">
       <Link
-        className={`group block text-[#333] font-medium flex items-center space-x-3 py-2 hover:text-[#FCB42D]`}
+        className={`group text-[#333] font-medium flex items-center space-x-3 py-2 hover:text-[#FCB42D]`}
         href="/dashboard"
       >
         <span className="border border-[#00000050] text-[#00000090] group-hover:text-[#FCB42D] w-8 h-8 flex items-center justify-center rounded-full group-hover:border-[#FCB42D]">
@@ -120,7 +120,7 @@ const SideBar = () => {
               </div>
               {pages.map((i) => (
                 <Link
-                  className={`group block text-[#333] font-medium flex items-center space-x-3 py-2 hover:text-[#FCB42D]`}
+                  className={`group text-[#333] font-medium flex items-center space-x-3 py-2 hover:text-[#FCB42D]`}
                   href={i?.href}
                 >
                   <span className="border border-[#00000050] text-[#00000090] group-hover:text-[#FCB42D] w-8 h-8 flex items-center justify-center rounded-full group-hover:border-[#FCB42D]">
