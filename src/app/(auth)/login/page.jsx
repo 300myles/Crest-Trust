@@ -13,13 +13,38 @@ export default function LoginPage() {
   const [formData, setFormData] = useState({
     email: "",
     pwd: "",
-    me: "",
   });
   const [rememberMe, setRememberMe] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submit = (e) => {
-    e.preventDefault()
-  }
+  const submit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(`/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+
+      console.log("data", data);
+      if (response.ok) {
+        setUser(data?.user);
+        router.replace("/dashboard");
+        console.log("====================================");
+        console.log("headers", response.headers);
+        console.log("====================================");
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <>
@@ -27,9 +52,9 @@ export default function LoginPage() {
         <title>Login</title>
         <meta name="description" content="Login to your account" />
       </Head>
-      <section className="relative w-full h-[100%] flex flex-row items-center bg-[#121212]">
+      <section className="relative text-[#333] w-full h-[100%] flex flex-row items-center bg-[#121212]">
         <div className="w-full lg:w-1/2 h-[100%] pt-9 px-4 lg:px-[60px] xl:px-[110px] lg:pr-[170px] bg-white py-12">
-          <div className="flex items-center space-x-4 text-3xl uppercase font-extrabold">
+          <div className="flex text-[#333] items-center space-x-4 text-3xl uppercase font-extrabold">
             <Image
               className=""
               width={37}
@@ -40,7 +65,7 @@ export default function LoginPage() {
             <span>Crest Trust</span>
           </div>
 
-          <div className="relative inline-flex items-center mt-16  lg:mt-24 text-[33px] capitalize font-bold">
+          <div className="relative inline-flex text-[#333] items-center mt-16  lg:mt-24 text-[33px] capitalize font-bold">
             <span className="absolute -top-10 -right-16">
               <Svg />
             </span>
@@ -50,7 +75,7 @@ export default function LoginPage() {
             Welcome back! Please enter your details
           </p>
 
-          <form className="mt-3">
+          <form onSubmit={submit} className="mt-3">
             <div className="">
               <label className="block text-md font-medium" htmlFor="email">
                 Email
@@ -73,9 +98,10 @@ export default function LoginPage() {
                 Password
               </label>
               <div className="w-full relative flex items-center border border-gray-300  mt-2 rounded-md border-[3px] text-gray-500 focus-within:border-primary">
-                <span onClick={() => {
-
-                }} className="w-[12%] flex items-center justify-center left-4">
+                <span
+                  onClick={() => {}}
+                  className="w-[12%] flex items-center justify-center left-4"
+                >
                   <svg
                     width="11"
                     height="12"
@@ -103,30 +129,49 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="mt-8 flex items-center space-x-2">
+            <div
+              onClick={() => setRememberMe(!rememberMe)}
+              className="mt-8 cursor-pointer flex items-center space-x-2"
+            >
               <CheckBox checked={rememberMe} setChecked={setRememberMe} />
-              <label className="text-md font-medium text-gray-600" htmlFor="remember-me">Remember me</label>
+              <label
+                className="text-md font-medium text-gray-600"
+                htmlFor="remember-me"
+              >
+                Remember me
+              </label>
             </div>
 
-            <CustomButton />
+            <CustomButton
+              disabled={isSubmitting || !formData?.email || !formData?.pwd}
+              action={submit}
+            />
 
-            <p className="text-center text-md mt-12 text-gray-500">Don’t have an account? <Link href="/signup" className="text-primary font-semibold">Sign up for free</Link></p>
+            <p className="text-center text-md mt-12 text-gray-500">
+              Don’t have an account?{" "}
+              <Link href="/signup" className="text-primary font-semibold">
+                Sign up for free
+              </Link>
+            </p>
           </form>
         </div>
 
         <div className="hidden absolute top-0 bottom-0 right-0 lg:flex flex-col items-center justify-center lg:solid w-1/2 h-screen bg-[#121212]">
-        <Image
-    src="/assets/trade.gif"
-    alt="Trade"
-    width={500} // Set the width explicitly
-    height={500} // Set the height explicitly
-    className="object-contain w-[90%] max-h-[510px]" // Ensures the image scales while maintaining aspect ratio
-  />
+          <Image
+            src="/assets/trade.gif"
+            alt="Trade"
+            priority
+            width={500} // Set the width explicitly
+            height={500} // Set the height explicitly
+            className="object-contain w-[90%] max-h-[510px]" // Ensures the image scales while maintaining aspect ratio
+          />
 
           <div className="bg-white w-1/2 text-[15px] mt-6 rounded-xl p-3">
             <h3 className="font-semibold">Trade with confidence</h3>
-            <p className="leading-[1rem] text-gray-500 text-[13px]">Your funds are always backed 1:1 on VtrChains with our regularly published audits on our Proof of Reserves.</p>
-            
+            <p className="leading-[1rem] text-gray-500 text-[13px]">
+              Your funds are always backed 1:1 on VtrChains with our regularly
+              published audits on our Proof of Reserves.
+            </p>
           </div>
         </div>
       </section>

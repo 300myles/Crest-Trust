@@ -7,6 +7,7 @@ const UserContext = createContext(undefined);
 
 export const UserProvider = ({children}) => {
   const [user, setUser] = useState(null);
+  const [sideNav, setSideNav] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
@@ -16,6 +17,9 @@ export const UserProvider = ({children}) => {
       const data = await getUserProfile(); // Call the service function
       if (data) {
         setUser(data.user); // Set the user data in state
+        console.log('====================================');
+        console.log(user);
+        console.log('====================================');
       } else {
         setUser(null); // If the user is not authenticated
       }
@@ -47,7 +51,7 @@ export const UserProvider = ({children}) => {
 
   return (
     <UserContext.Provider
-      value={{ user, isLoading, logout, refreshUser: fetchUser }}
+      value={{ user, setUser, isLoading, logout, sideNav, setSideNav, refreshUser: fetchUser }}
     >
       {children}
     </UserContext.Provider>

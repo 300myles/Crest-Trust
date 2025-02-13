@@ -2,7 +2,7 @@
 export async function getUserProfile() {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_User_SERVER_URL}/api/user/getuser`,
+      `/api/user/profile`,
       {
         method: "GET",
         credentials: "include",
@@ -25,14 +25,14 @@ export async function getUserProfile() {
 export async function logoutUser() {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_USER_SERVER_URL}/api/user/logout`,
+      `/api/auth/logout`,
       {
         method: "GET",
         credentials: "include",
       }
     );
 
-    return response;
+    if (response.ok) return true;
   } catch (error) {
     console.error("Error during logout:", error);
     throw error;

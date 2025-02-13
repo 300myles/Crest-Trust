@@ -14,7 +14,7 @@ export default {
         foreground: "var(--foreground)",
       },
       fontFamily: {
-        roboto: ['Roboto', 'sans-serif'], // Define the Roboto font family
+        roboto: ['Archivo', 'serif'], // Define the Roboto font family
       },
     },
   },

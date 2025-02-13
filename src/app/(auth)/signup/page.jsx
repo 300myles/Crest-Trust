@@ -11,18 +11,43 @@ import { useRouter } from "next/navigation";
 export default function SingupPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    fullName: "",
+    name: "",
     email: "",
     pwd: "",
-    me: "",
-    DOB: "",
+    dob: "",
   });
   const [checkpwd, setCheckpwd] = useState("");
   const [showpwd, setShowpwd] = useState(false);
   const [agreement, setAgreement] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      if (formData?.pwd !== checkpwd) throw new Error("Password dosen't match");
+      if (!agreement) throw new Error("You must accept the terms of agreement");
+
+      const response = await fetch(`/api/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+      
+      console.log("data", data);
+
+      if (response.ok) {
+        router.replace("/login");
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -31,7 +56,7 @@ export default function SingupPage() {
         <title>Login</title>
         <meta name="description" content="Login to your account" />
       </Head>
-      <section className="relative w-full h-[100%] bg-[#121212] flex flex-row items-center">
+      <section className="relative w-full h-[100%] bg-[#121212] text-[#333] flex flex-row items-center">
         <div className="w-full lg:w-1/2 h-[100%] bg-white pt-9 px-5 md:px-8 lg:px-[60px] xl:px-[110px] lg:pr-[170px] py-12">
           <div className="flex items-center space-x-4 text-3xl uppercase font-extrabold">
             <Image
@@ -54,9 +79,9 @@ export default function SingupPage() {
             Welcome! Please enter your details
           </p>
 
-          <form className="mt-3">
+          <form onSubmit={submit} className="mt-3">
             <div className="">
-              <label className="block text-md font-medium" htmlFor="fullName">
+              <label className="block text-md font-medium" htmlFor="name">
                 Full Name
               </label>
               <div className="w-full relative flex items-center border border-gray-300  mt-2 rounded-md border-[3px] text-gray-500 focus-within:border-primary">
@@ -78,14 +103,14 @@ export default function SingupPage() {
                   </svg>
                 </span>
                 <input
-                  value={formData?.fullName}
+                  value={formData?.name}
                   className="outline-0 py-3 w-full rounded-md"
                   placeholder="Enter your full name"
                   onChange={(e) =>
-                    setFormData({ ...formData, fullName: e.target.value })
+                    setFormData({ ...formData, name: e.target.value })
                   }
-                  id="fullName"
-                  name="fullName"
+                  id="name"
+                  name="name"
                   type="text"
                 ></input>
               </div>
@@ -145,7 +170,7 @@ export default function SingupPage() {
             </div>
 
             <div className="mt-3">
-              <label className="block text-md font-medium" htmlFor="pwd">
+              <label className="block text-md font-medium" htmlFor="checkpwd">
                 Repeat Password
               </label>
               <div className="w-full relative flex items-center border border-gray-300  mt-2 rounded-md border-[3px] text-gray-500 focus-within:border-primary">
@@ -179,19 +204,19 @@ export default function SingupPage() {
             </div>
 
             <div className="mt-3">
-              <label className="block text-md font-medium" htmlFor="email">
+              <label className="block text-md font-medium" htmlFor="dob">
                 Date of Birth
               </label>
               <input
-                value={formData?.DOB}
+                value={formData?.dob}
                 className="w-full py-3 px-10 border border-gray-300  mt-2 rounded-md text-gray-500 focus:outline-primary"
                 placeholder="Enter your email"
                 onChange={(e) => {
-                  setFormData({ ...formData, DOB: e.target.value });
+                  setFormData({ ...formData, dob: e.target.value });
                   console.log(e.target.value);
                 }}
-                id="DOB"
-                name="DOB"
+                id="dob"
+                name="dob"
                 type="date"
               />
             </div>
@@ -206,7 +231,7 @@ export default function SingupPage() {
               </label>
             </div>
 
-            <CustomButton />
+            <CustomButton action={submit} />
 
             <p className="text-center text-md mt-12 text-gray-500">
               Already have an account?{" "}
@@ -221,6 +246,7 @@ export default function SingupPage() {
           <Image
             src="/assets/trade.gif"
             alt="Trade"
+            priority
             width={500} // Set the width explicitly
             height={500} // Set the height explicitly
             className="object-contain w-[90%] max-h-[510px]" // Ensures the image scales while maintaining aspect ratio

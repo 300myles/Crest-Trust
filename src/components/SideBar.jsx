@@ -1,3 +1,5 @@
+"use client";
+import { useUser } from "@/contexts/UserContext";
 import Link from "next/link";
 import React from "react";
 import {
@@ -6,7 +8,15 @@ import {
   FaInbox,
   FaCompass,
   FaRegMoneyBillAlt,
+  FaSignal,
+  FaSuitcase,
+  FaBriefcase,
+  FaIdCard,
+  FaPowerOff,
 } from "react-icons/fa";
+import { TfiTarget } from "react-icons/tfi";
+import { TbSpeakerphone } from "react-icons/tb";
+import { logoutUser } from "@/utils/app";
 
 const routes = [
   {
@@ -40,67 +50,64 @@ const routes = [
     pages: [
       {
         label: "Purchase Signal",
-        icon: FaUsers,
+        icon: FaSignal,
         color: "text-[#ff00c1]", // Neon pink
-        href: "/users",
-        route: "/users/:id",
+        href: "/signal",
+        route: "/signal",
       },
       {
         label: "Upgrade Account",
-        icon: FaUsers,
+        icon: FaSuitcase,
         color: "text-[#ff00c1]", // Neon pink
-        href: "/coaches",
-        route: "/coaches/6",
+        href: "/buy-plan",
+        route: "/buy-plan",
       },
       {
         label: "My Plans",
-        icon: FaRegNewspaper,
+        icon: FaBriefcase,
         color: "text-[#ff00c1]", // Neon pink
-        href: "/blogs/view",
-        route: "/blogs/view",
+        href: "/all-plans",
+        route: "/all-plans",
       },
       {
         label: "Affiliate Program",
-        icon: FaUsers,
+        icon: TfiTarget,
         color: "text-[#ff00c1]", // Neon pink
-        href: "/coaches",
-        route: "/coaches/6",
+        href: "/referuser",
+        route: "/referuser",
       },
       {
         label: "Verify Account",
-        icon: FaRegNewspaper,
+        icon: FaIdCard,
         color: "text-[#ff00c1]", // Neon pink
-        href: "/blogs/view",
-        route: "/blogs/view",
-      },
-      {
-        label: "Profit History",
-        icon: FaUsers,
-        color: "text-[#ff00c1]", // Neon pink
-        href: "/coaches",
-        route: "/coaches/6",
+        href: "/verify-account",
+        route: "/verify-account",
       },
       {
         label: "Support",
-        icon: FaRegNewspaper,
+        icon: TbSpeakerphone,
         color: "text-[#ff00c1]", // Neon pink
-        href: "/blogs/view",
-        route: "/blogs/view",
+        href: "/support",
+        route: "/support",
       },
       {
         label: "Logout",
-        icon: FaRegNewspaper,
+        icon: FaPowerOff,
+        action: logoutUser,
         color: "text-[#ff00c1]", // Neon pink
-        href: "/blogs/view",
-        route: "/blogs/view",
       },
     ],
   },
 ];
 
 const SideBar = () => {
+  const { setSideNav, sideNav, setUser } = useUser();
   return (
-    <div className="w-[25%] bg-white overflow-auto sticky top-0  h-full border py-4 px-4">
+    <div
+      className={`w-[25%] md:block bg-white overflow-auto md:sticky top-0  h-screen border py-4 px-4 ${
+        sideNav ? "w-[100%] block z-40" : "hidden"
+      }`}
+    >
       <Link
         className={`group text-[#333] font-medium flex items-center space-x-3 py-2 hover:text-[#FCB42D]`}
         href="/dashboard"
@@ -111,15 +118,25 @@ const SideBar = () => {
         <span>Dashboard</span>
       </Link>
 
-      {routes.map(({ pages, title }) => {
+      {routes.map(({ pages, title }, id) => {
         return (
           <>
-            <div className="">
+            <div key={id} className="">
               <div className="text-[#333] font-semibold text-lg py-2">
                 {title}
               </div>
-              {pages.map((i) => (
-                <Link
+              {pages.map((i, index) => (
+                i?.action ? (
+                  (<div key={index}
+                    className={`group text-[#333] font-medium flex items-center space-x-3 py-2 hover:text-[#FCB42D]`}
+                    onClick={() => setUser(null)}
+                  >
+                    <span className="border border-[#00000050] text-[#00000090] group-hover:text-[#FCB42D] w-8 h-8 flex items-center justify-center rounded-full group-hover:border-[#FCB42D]">
+                      <i.icon size={16} />
+                    </span>
+                    <span>{i?.label}</span>
+                  </div>)
+                ) :(<Link key={index}
                   className={`group text-[#333] font-medium flex items-center space-x-3 py-2 hover:text-[#FCB42D]`}
                   href={i?.href}
                 >
@@ -127,7 +144,7 @@ const SideBar = () => {
                     <i.icon size={16} />
                   </span>
                   <span>{i?.label}</span>
-                </Link>
+                </Link>)
               ))}
             </div>
           </>
