@@ -1,63 +1,92 @@
-// pages/api/transactions/create.js
-
 import dbConnect from "@/lib/mongodb";
-import authMiddleware from "@/lib/auth";
+import { authMiddleware } from "@/lib/auth";
 import Transactions from "@/models/Transactions";
 import User from "@/models/User";
 
-async function POST(req, res) {
-  if (req.method !== "POST")
-    return res.status(405).json({ message: "Method Not Allowed" });
-
-  const { amount, type, description } = req.body;
-
-  if (!amount || !type || !description) {
-    return res.status(400).json({ message: "All fields are required" });
-  }
-
+export async function POST(req) {
   try {
+    // Authenticate user
+    const user = await authMiddleware(req);
+    if (user instanceof Response) return user; // Return error if authentication fails
+
     await dbConnect();
 
-    // Find the user by ID (from the token)
-    const user = await User.findById(req.user.userId); // We use req.user, set by authMiddleware
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    // Parse request body
+    const { amount, type, description } = await req.json();
+
+    if (!amount || !type || !description) {
+      return new Response(
+        JSON.stringify({ message: "All fields are required" }),
+        { status: 400 }
+      );
     }
 
-    // Calculate the balance after the transaction
-    let balanceAfterTransaction;
+    if (amount <= 0) {
+      return new Response(
+        JSON.stringify({ message: "Amount must be greater than zero" }),
+        { status: 400 }
+      );
+    }
+
+    // Find the user
+    const userProfile = await User.findById(user.userId);
+    if (!userProfile) {
+      return new Response(
+        JSON.stringify({ message: "User not found" }),
+        { status: 404 }
+      );
+    }
+
+    // Calculate new balance
+    let newBalance = userProfile.balance;
     if (type === "deposit") {
-      balanceAfterTransaction = user.balance + amount;
+      newBalance += amount;
     } else if (type === "withdrawal") {
-      balanceAfterTransaction = user.balance - amount;
+      if (userProfile.balance < amount) {
+        return new Response(
+          JSON.stringify({ message: "Insufficient funds" }),
+          { status: 400 }
+        );
+      }
+      newBalance -= amount;
     } else {
-      return res.status(400).json({ message: "Invalid transaction type" });
+      return new Response(
+        JSON.stringify({ message: "Invalid transaction type" }),
+        { status: 400 }
+      );
     }
 
-    // Create the transaction
-    const transaction = new Transactions({
-      user: req.user.userId, // Link to authenticated user
+    // Create a transaction
+    const transaction = await Transactions.create({
+      user: userProfile._id,
       amount,
       type,
       description,
-      balanceAfterTransaction,
+      balanceAfterTransaction: newBalance,
     });
 
-    await transaction.save();
+    // Update user balance and add transaction reference
+    userProfile.balance = newBalance;
+    userProfile.transactions.push(transaction._id);
+    await userProfile.save();
 
-    // Update the user's balance and add the transaction reference
-    user.balance = balanceAfterTransaction;
-    user.transactions.push(transaction._id);
-    await user.save();
-
-    res.status(201).json({
-      message: "Transaction successful",
-      transaction,
-      user,
-    });
+    return new Response(
+      JSON.stringify({
+        message: "Transaction successful",
+        transaction,
+        user: {
+          id: userProfile._id,
+          name: userProfile.name,
+          email: userProfile.email,
+          balance: userProfile.balance,
+        },
+      }),
+      { status: 201 }
+    );
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    return new Response(
+      JSON.stringify({ message: "Server error", error: error.message }),
+      { status: 500 }
+    );
   }
 }
-
-export default authMiddleware(POST); // Wrap the handler with the authMiddleware

@@ -1,42 +1,49 @@
-
 import dbConnect from "@/lib/mongodb";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 
-export default async function POST(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" });
-  }
-
-  const { name, email, pwd, dob } = req.body;
-
-  if (!name || !email || !pwd) {
-    return res.status(400).json({ message: "All fields are required" });
-  }
-
+export async function POST(req) {
   try {
+    const { name, email, pwd, dob } = await req.json();
+
+    if (!name || !email || !pwd || !dob) {
+      return new Response(
+        JSON.stringify({ message: "All fields are required" }),
+        { status: 400 }
+      );
+    }
+
     await dbConnect();
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+      return new Response(
+        JSON.stringify({ message: "User already exists" }),
+        { status: 400 }
+      );
     }
 
-    // Hash pwd
+    // Hash password
     const hashedPassword = await bcrypt.hash(pwd, 10);
 
     // Create new user
     const newUser = await User.create({
       name,
-      balance: 0,
+      balance: 0, // Default balance set to 0
       email,
       dob,
       pwd: hashedPassword,
     });
 
-    res.status(201).json({ message: "User created successfully", user: newUser });
+    return new Response(
+      JSON.stringify({ message: "User created successfully", user: newUser }),
+      { status: 201 }
+    );
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    return new Response(
+      JSON.stringify({ message: "Server error", error: error.message }),
+      { status: 500 }
+    );
   }
 }

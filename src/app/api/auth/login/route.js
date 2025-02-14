@@ -1,32 +1,36 @@
-
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import cookie from "cookie";
+import * as cookie from "cookie";
 import dbConnect from "@/lib/mongodb";
 import User from "@/models/User";
 
-export default async function POST(req, res) {
-  if (req.method !== "POST") return res.status(405).json({ message: "Method Not Allowed" });
-
-  const { email, pwd } = req.body;
-
-  if (!email || !pwd) {
-    return res.status(400).json({ message: "Email and pwd are required" });
-  }
-
+export async function POST(req) {
   try {
+    // Parse request body
+    const { email, pwd } = await req.json();
+
+    if (!email || !pwd) {
+      return new Response(JSON.stringify({ message: "Email and password are required" }), {
+        status: 400,
+      });
+    }
+
     await dbConnect();
 
     // Find user by email
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return new Response(JSON.stringify({ message: "Invalid credentials" }), {
+        status: 401,
+      });
     }
 
-    // Compare pwds
+    // Compare password
     const isMatch = await bcrypt.compare(pwd, user.pwd);
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return new Response(JSON.stringify({ message: "Invalid credentials" }), {
+        status: 401,
+      });
     }
 
     // Generate JWT token
@@ -34,23 +38,29 @@ export default async function POST(req, res) {
       expiresIn: "7d",
     });
 
-    // Set token in HTTP-only cookie
-    res.setHeader(
-      "Set-Cookie",
-      cookie.serialize("authToken", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        path: "/",
-        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-      })
-    );
-
-    res.status(200).json({
-      message: "Login successful",
-      user: { id: user._id, name: user.name, email: user.email },
+    // Set cookie header
+    const cookieHeader = cookie.serialize("authToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60, // 7 days
     });
+
+    return new Response(
+      JSON.stringify({
+        message: "Login successful",
+        user: { id: user._id, name: user.name, email: user.email },
+      }),
+      {
+        status: 200,
+        headers: { "Set-Cookie": cookieHeader },
+      }
+    );
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    return new Response(
+      JSON.stringify({ message: "Server error", error: error.message }),
+      { status: 500 }
+    );
   }
 }

@@ -7,9 +7,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/contexts/UserContext";
 
 export default function LoginPage() {
   const router = useRouter();
+  const {setUser} = useUser();
   const [formData, setFormData] = useState({
     email: "",
     pwd: "",
@@ -33,7 +35,7 @@ export default function LoginPage() {
 
       console.log("data", data);
       if (response.ok) {
-        setUser(data?.user);
+        setUser(data);
         router.replace("/dashboard");
         console.log("====================================");
         console.log("headers", response.headers);

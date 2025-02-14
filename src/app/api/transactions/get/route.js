@@ -5,25 +5,26 @@ import Transactions from "@/models/Transactions";
 
 // Define the GET method explicitly
 export async function GET(req) {
-  try {
-    // Authenticate the user
-    const user = await authMiddleware(req);
-    if (user instanceof Response) return user; // Return error response if authentication fails
+  // Authenticate the user
+  const user = await authMiddleware(req);
+  if (user instanceof Response) return user; // Return if authentication failed
 
+  try {
     await dbConnect();
 
     // Fetch user profile using the decoded user ID from the token
-    const userProfile = await User.findById(user.userId).lean();
+    const userProfile = await User.findById(user.userId);
     if (!userProfile) {
       return new Response(JSON.stringify({ message: "User not found" }), {
         status: 404,
       });
     }
 
-    // Fetch user transactions
-    const userTransactions = await Transactions.find({ user: userProfile._id }).lean();
+    // Fetch user transactions correctly
+    const userTransactions = await Transactions.find({ user: userProfile._id });
 
-    if (!userTransactions || userTransactions.length === 0) {
+    // If no transactions found
+    if (!userTransactions.length) {
       return new Response(
         JSON.stringify({ message: "No transactions found" }),
         { status: 404 }
@@ -32,7 +33,7 @@ export async function GET(req) {
 
     return new Response(
       JSON.stringify({
-        status: "success",
+        status: "successful",
         data: userTransactions,
       }),
       { status: 200 }

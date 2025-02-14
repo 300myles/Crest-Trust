@@ -50,11 +50,11 @@ const Dashboard = () => {
       </div>
 
       <div className="w-full border-[#ced4da] grid grid-cols-1 gap-8 mt-6 md:grid-cols-3">
-        <div className="col-span-2 h-full border">
+        <div className="md:col-span-2 h-full border">
           <TradingViewWidget />
         </div>
 
-        <div className="col-span-1 text-[#212529] border bg-[#fff] rounded-md p-6 py-7">
+        <div className="md:col-span-1 text-[#212529] border bg-[#fff] rounded-md p-6 py-7">
           <p className="text-2xl font-bold mb-[1rem]">Assets</p>
 
           <div className="mb-[1rem] rounded-r rounded-tl relative flex items-center  border border-[#ced4da] w-full">
@@ -188,7 +188,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="col-span-3 grid grid-cols-1 gap-8 md:grid-cols-2 text-[#212529] rounded-md ">
+        <div className="md:col-span-3 grid grid-cols-1 gap-8 md:grid-cols-2 text-[#212529] rounded-md ">
           <div className="col-span-1 text-[#212529]">
             <div className="bg-[#fff] rounded-md py-4 border">
               <div className="px-4 capitalize text-2xl font-bold">

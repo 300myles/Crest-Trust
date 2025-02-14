@@ -5,12 +5,17 @@ import User from "@/models/User";
 // Define the GET method explicitly
 export async function GET(req) {
   try {
-    const { user } = await authMiddleware(req); // Use the middleware properly
+    // Authenticate user
+    const authResponse = await authMiddleware(req);
+    
+    if (authResponse instanceof Response) {
+      return authResponse; // Return authentication error response
+    }
 
     await dbConnect();
 
     // Fetch user profile using the decoded user ID from the token
-    const userProfile = await User.findById(user.userId);
+    const userProfile = await User.findById(authResponse.userId);
 
     if (!userProfile) {
       return new Response(JSON.stringify({ message: "User not found" }), {

@@ -1,12 +1,13 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getUserProfile, logoutUser } from "@/utils/app";
+import { getUserProfile, getUserTransactions, logoutUser } from "@/utils/app";
 
 const UserContext = createContext(undefined);
 
 export const UserProvider = ({children}) => {
   const [user, setUser] = useState(null);
+  const [transactions, setTransactions] = useState([]);
   const [sideNav, setSideNav] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -16,10 +17,7 @@ export const UserProvider = ({children}) => {
     try {
       const data = await getUserProfile(); // Call the service function
       if (data) {
-        setUser(data.user); // Set the user data in state
-        console.log('====================================');
-        console.log(user);
-        console.log('====================================');
+        setUser(data); // Set the user data in state
       } else {
         setUser(null); // If the user is not authenticated
       }
@@ -30,10 +28,33 @@ export const UserProvider = ({children}) => {
     }
   };
 
+  const fetchTransactions = async () => {
+    try {
+      const data = await getUserTransactions(); // Call the service function
+      if (data) {
+        setTransactions(data); // Set the user transactions in state
+        console.log('====================================');
+        console.log(transactions);
+        console.log('====================================');
+      } else {
+        setTransactions([]); // If the user does not exist
+      }
+    } catch (error) {
+      console.error("Failed to fetch user profile:", error);
+    } finally {
+      setIsLoading(false); // Make sure loading is set to false after the fetch
+    }
+  }
+
   // Initial fetch
   useEffect(() => {
     fetchUser();
   }, []);
+
+  // fetch after user state updates
+  useEffect(() => {
+    if (user) fetchTransactions();
+  }, [user]);
 
   // Handle logout using the service function
   const logout = async () => {

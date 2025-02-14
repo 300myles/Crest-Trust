@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import cookie from "cookie";
+import * as cookie from "cookie";
 
 export default async function authMiddleware(req) {
   // Parse cookies manually (since Next.js does not do it automatically)
