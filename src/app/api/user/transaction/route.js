@@ -3,7 +3,7 @@ import { authMiddleware } from "@/lib/auth";
 import User from "@/models/User";
 import Transactions from "@/models/Transactions";
 
-// Define the GET method explicitly
+// Define the GET method explicitly'
 export async function GET(req) {
   try {
     // Authenticate the user
