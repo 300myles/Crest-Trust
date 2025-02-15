@@ -8,15 +8,15 @@ const ReferUserPage = () => {
         Refer users to Crest Trust community
       </p>
 
-      <div className="flex flex-col items-center gap-6 bg-white p-5 px-8 md:py-12">
-        <p className="text-center text-sm font-bold md:text-base ">
+      <div className="flex flex-col items-center gap-6 bg-white p-5 px-8 lg:py-12">
+        <p className="text-center text-sm font-bold lg:text-base ">
           You can refer users by sharing your referral link:
         </p>
 
-        <div class="mb-3 w-full flex items-center justify-center input-group">
+        <div className="mb-3 w-full flex items-center justify-center input-group">
           <input
             type="text"
-            class="bg-[#e9ecef] w-[45%] text-base border rounded-tl-md py-3 px-4 border-[#ced4da]"
+            className="bg-[#e9ecef] w-[45%] text-base border rounded-tl-md py-3 px-4 border-[#ced4da]"
             value="support@cressttrustinv.orrg/ref/300myles"
             id="reflink"
             readonly=""
@@ -24,22 +24,22 @@ const ReferUserPage = () => {
 
           <div
             onClick="myFunction()"
-            class="bg-transparent border border-[#6c757d] py-4 text-[#6c757d] px-4 text-md"
+            className="bg-transparent border border-[#6c757d] py-4 text-[#6c757d] px-4 text-md"
           >
             <FaCopy />
           </div>
         </div>
 
         <div className="flex flex-col items-center gap-2">
-          <p className="text-center text-sm font-bold md:text-base ">
+          <p className="text-center text-sm font-bold lg:text-base ">
             or your Referral ID
           </p>
 
-          <p className="text-center text-[#28a745] text-md font-extrabold md:text-xl ">
+          <p className="text-center text-[#28a745] text-md font-extrabold lg:text-xl ">
             300myles
           </p>
 
-          <p className="text-center text-md font-extrabold md:text-xl ">
+          <p className="text-center text-md font-extrabold lg:text-xl ">
             You were referred by
           </p>
 
@@ -51,7 +51,7 @@ const ReferUserPage = () => {
       </div>
 
       <div className="flex flex-col gap-3">
-        <p className="text-start text-sm font-bold md:text-base ">
+        <p className="text-start text-sm font-bold lg:text-base ">
           Your Referrals.
         </p>
 
@@ -60,14 +60,14 @@ const ReferUserPage = () => {
             <tr className="border-b-2 grid grid-cols-5 w-full border-b-[#dee2e6] text-[#333]">
               <th className="px-4 py-3 ">Client name</th>
 
-              <th className="px-4 py-3 border-l border-gray-200 ">Ref. level</th>
-
-              <th className="px-4 py-3 border-x border-gray-200 ">
-              Parent
+              <th className="px-4 py-3 border-l border-gray-200 ">
+                Ref. level
               </th>
 
+              <th className="px-4 py-3 border-x border-gray-200 ">Parent</th>
+
               <th className="px-4 py-3 border-x border-gray-200 ">
-              Client status
+                Client status
               </th>
 
               <th className="px-4 py-3 min-w-[120px]">Date registered</th>

@@ -12,9 +12,9 @@ export async function POST(req) {
     await dbConnect();
 
     // Parse request body
-    const { amount, type, description } = await req.json();
+    const { name, amount, type } = await req.json();
 
-    if (!amount || !type || !description) {
+    if (!name || !amount || !type || !description) {
       return new Response(
         JSON.stringify({ message: "All fields are required" }),
         { status: 400 }
@@ -24,6 +24,13 @@ export async function POST(req) {
     if (amount <= 0) {
       return new Response(
         JSON.stringify({ message: "Amount must be greater than zero" }),
+        { status: 400 }
+      );
+    }
+
+    if (!["USDT", "Litecoin", "Ethereum", "Bitcoin"].includes(name)) {
+      return new Response(
+        JSON.stringify({ message: "Currency not available" }),
         { status: 400 }
       );
     }
@@ -59,9 +66,9 @@ export async function POST(req) {
     // Create a transaction
     const transaction = await Transactions.create({
       user: userProfile._id,
+      name,
       amount,
       type,
-      description,
       balanceAfterTransaction: newBalance,
     });
 

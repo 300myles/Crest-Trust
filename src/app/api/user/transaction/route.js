@@ -1,19 +1,21 @@
 import dbConnect from "@/lib/mongodb";
-import { authMiddleware } from "@/lib/auth";
+import authMiddleware from "@/lib/auth";
 import User from "@/models/User";
 import Transactions from "@/models/Transactions";
 
 // Define the GET method explicitly'
 export async function GET(req) {
   try {
-    // Authenticate the user
-    const user = await authMiddleware(req);
-    if (user instanceof Response) return user; // Return error response if authentication fails
+    const authResponse = await authMiddleware(req);
+
+    if (authResponse instanceof Response) {
+      return authResponse; // Return authentication error response
+    }
 
     await dbConnect();
 
     // Fetch user profile using the decoded user ID from the token
-    const userProfile = await User.findById(user.userId).lean();
+    const userProfile = await User.findById(authResponse.userId).lean();
     if (!userProfile) {
       return new Response(JSON.stringify({ message: "User not found" }), {
         status: 404,
@@ -21,7 +23,9 @@ export async function GET(req) {
     }
 
     // Fetch user transactions
-    const userTransactions = await Transactions.find({ user: userProfile._id }).lean();
+    const userTransactions = await Transactions.find({
+      user: userProfile._id,
+    }).lean();
 
     if (!userTransactions || userTransactions.length === 0) {
       return new Response(

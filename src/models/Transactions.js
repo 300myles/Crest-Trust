@@ -15,13 +15,14 @@ const TransactionSchema = new mongoose.Schema({
     enum: ["deposit", "withdrawal"], 
     required: true 
   },
+  name: { 
+    type: String, 
+    enum: ["USDT", "Litecoin", "Ethereum", "Bitcoin"], 
+    required: true 
+  },
   date: { 
     type: Date, 
     default: Date.now 
-  },
-  description: { 
-    type: String, 
-    required: true 
   },
   balanceAfterTransaction: { 
     type: Number, 

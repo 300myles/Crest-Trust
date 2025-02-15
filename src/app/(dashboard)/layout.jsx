@@ -18,7 +18,7 @@ const DashboardLayout = ({ children }) => {
             <Image src="/assets/logo.png" alt="Crest Trust" width={50} height={50} />
           </div>
 
-          <div className="hidden md:flex items-center space-x-3">
+          <div className="hidden lg:flex items-center space-x-3">
             <span className="text-white/80 text-lg font-semibold">
               Hello, {user?.name}
             </span>
@@ -33,7 +33,7 @@ const DashboardLayout = ({ children }) => {
 
           <div
           onClick={() => setSideNav(!sideNav)}
-          className="flex md:hidden items-center justify-center py-2 px-4"
+          className="flex lg:hidden items-center justify-center py-2 px-4"
         >
           <Image
             src={hamburger}
@@ -53,7 +53,7 @@ const DashboardLayout = ({ children }) => {
           <div className={`w-full bg-[#f9f9f9] h-full ${sideNav && "hidden"}`}>
             {children}
 
-            <div className="px-5 text-black mt-10 text-[12px] md:text-sm mb-12">
+            <div className="px-5 text-black mt-10 text-[12px] lg:text-sm mb-12">
               Copyright © Crest Trust Investment Company offers a simple and
               transparent mechanism for attracting investments and making
               profits.

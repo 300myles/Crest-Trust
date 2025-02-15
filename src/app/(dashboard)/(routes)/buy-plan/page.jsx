@@ -120,15 +120,15 @@ const BuyPlanPage = () => {
 
       <p className="text-[2rem] font-bold">Upgrade your Account Plan</p>
 
-      <div className="w-full grid md:grid-cols-3 grid-cols-1 sm:grid-cols-2 gap-6 p-4 mt-3 rounded mb-5">
+      <div className="w-full grid lg:grid-cols-3 grid-cols-1 sm:grid-cols-2 gap-6 p-4 mt-3 rounded mb-5">
         {Plans &&
           Plans.map((plan) => (
-            <div class="flex bg-white h-fit flex-col just gap-3 text-center border px-5 py-3">
-              <div class="text-yellow border-b border-b-[#00000020] pb-3">
-                <h5 class="m-0 text-2xl text-center text-wrap font-bold">
+            <div className="flex bg-white h-fit flex-col just gap-3 text-center border px-5 py-3">
+              <div className="text-yellow border-b border-b-[#00000020] pb-3">
+                <h5 className="m-0 text-2xl text-center text-wrap font-bold">
                   {plan?.percentage} % ROI
                 </h5>
-                <h5 class="m-0 text-2xl text-center text-wrap font-extrabold ">
+                <h5 className="m-0 text-2xl text-center text-wrap font-extrabold ">
                   {plan?.name}
                 </h5>
               </div>
@@ -158,7 +158,7 @@ const BuyPlanPage = () => {
 
               <button
                 type="button"
-                class="w-full p-2 bg-yellow hover:bg-blue-700 text-white text-sm"
+                className="w-full p-2 bg-yellow hover:bg-blue-700 text-white text-sm"
               >
                 Join Plan
               </button>

@@ -3,14 +3,14 @@ import Link from "next/link";
 import React, { useState } from "react";
 
 const SupportPage = () => {
-    const [message, setMessage] = useState("");
-    const submit = (e) => {
-        e.preventDefault()
-        alert(message)
-    }
+  const [message, setMessage] = useState("");
+  const submit = (e) => {
+    e.preventDefault();
+    alert(message);
+  };
   return (
-    <div className="w-full p-5 bg-white flex items-center flex-col  py-8 md:py-16 px-6  h-full text-[#333]">
-      <div className="w-full md:w-3/5 flex flex-col gap-2">
+    <div className="w-full p-5 bg-white flex items-center flex-col  py-8 lg:py-16 px-6  h-full text-[#333]">
+      <div className="w-full lg:w-3/5 flex flex-col gap-2">
         <p className="text-[2.4rem] text-center font-extrabold">
           Crest Trust Support
         </p>
@@ -40,7 +40,9 @@ const SupportPage = () => {
           <button
             type="submit"
             disabled={!message}
-            class={`w-full p-2 mt-12 bg-yellow hover:bg-blue-700 text-white text-sm ${!message && "opacity-70 cursor-not-allowed"}`}
+            className{`w-full p-2 mt-12 bg-yellow hover:bg-blue-700 text-white text-sm ${
+              !message && "opacity-70 cursor-not-allowed"
+            }`}
           >
             Send
           </button>

@@ -72,7 +72,7 @@ export const UserProvider = ({children}) => {
 
   return (
     <UserContext.Provider
-      value={{ user, setUser, isLoading, logout, sideNav, setSideNav, refreshUser: fetchUser }}
+      value={{ user, setUser, isLoading, setTransactions, logout, sideNav, setSideNav, refreshUser: fetchUser }}
     >
       {children}
     </UserContext.Provider>

@@ -36,7 +36,7 @@ export async function POST(req) {
     // Generate JWT token
     const token = jwt.sign({ userId: user._id, email }, process.env.JWT_SECRET, {
       expiresIn: "7d",
-    });
+    })
 
     // Set cookie header
     const cookieHeader = cookie.serialize("authToken", token, {

@@ -44,13 +44,36 @@ export async function getUserTransactions() {
   }
 }
 
+export async function makeTransaction(form) {
+  try {
+    const response = await fetch(`/api/transactions/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(form),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Transaction failed");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error making transaction:", error);
+    throw error;
+  }
+}
+
+
 // Logout the user by hitting the /logout endpoint
 export async function logoutUser() {
   try {
     const response = await fetch(
       `/api/auth/logout`,
       {
-        method: "GET",
+        method: "POST",
         credentials: "include",
       }
     );
@@ -61,3 +84,9 @@ export async function logoutUser() {
     throw error;
   }
 }
+
+export const copyFunction = (text) => {
+  navigator.clipboard.writeText(text)
+    .then(() => alert("Copied to clipboard!"))
+    .catch((err) => console.error("Failed to copy: ", err));
+};

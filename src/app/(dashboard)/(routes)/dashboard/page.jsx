@@ -1,18 +1,19 @@
-"use client"
+"use client";
 import TradingViewWidget from "@/components/TradingViewWidget";
 import { useUser } from "@/contexts/UserContext";
+import { copyFunction } from "@/utils/app";
 import Image from "next/image";
 import React from "react";
 
 const Dashboard = () => {
-  const {user} = useUser();
+  const { user } = useUser();
   return (
     <div className="w-full p-5 h-full">
-      <div className="w-full grid grid-cols-1 gap-10 md:grid-cols-3">
+      <div className="w-full grid grid-cols-1 gap-10 lg:grid-cols-3">
         <div className="w-full flex rounded-lg h-24 bg-[#30B9BA] border-black">
           <div className="w-4/5 flex flex-col justify-between p-5 h-full">
             <div className="font-roboto font-semibold text-2xl text-white">
-              &#x20A6;0.00
+              &#x20A6;{user?.balance || 0}.00
             </div>
             <div className="text-[12px] text-white/60 font-roboto font-semibold">
               Deposits
@@ -26,7 +27,7 @@ const Dashboard = () => {
         <div className="w-full flex rounded-lg h-24 bg-[#28a745] border-black">
           <div className="w-4/5 flex flex-col justify-between p-5 h-full">
             <div className="font-roboto font-semibold text-2xl text-white">
-              &#x20A6;0.00
+              &#x20A6;{user?.balance || 0}.00
             </div>
             <div className="text-[12px] text-white/60 font-roboto font-semibold uppercase">
               profit
@@ -40,7 +41,7 @@ const Dashboard = () => {
         <div className="w-full flex rounded-lg h-24 bg-[#dc3545] border-black">
           <div className="w-4/5 flex flex-col justify-between p-5 h-full">
             <div className="font-roboto font-semibold text-2xl text-white">
-              &#x20A6;0.00
+              &#x20A6;{user?.balance || 0}.00
             </div>
             <div className="text-[12px] text-white/60 font-roboto font-semibold uppercase">
               Total withdrawal
@@ -52,12 +53,12 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="w-full border-[#ced4da] grid grid-cols-1 gap-8 mt-6 md:grid-cols-3">
-        <div className="md:col-span-2 h-96 md:h-full border">
+      <div className="w-full border-[#ced4da] grid grid-cols-1 gap-8 mt-6 lg:grid-cols-3">
+        <div className="lg:col-span-2 h-96 lg:h-full border">
           <TradingViewWidget />
         </div>
 
-        <div className="md:col-span-1 text-[#212529] border bg-[#fff] rounded-md p-6 py-7">
+        <div className="lg:col-span-1 text-[#212529] border bg-[#fff] rounded-md p-6 py-7">
           <p className="text-2xl font-bold mb-[1rem]">Assets</p>
 
           <div className="mb-[1rem] rounded-r rounded-tl relative flex items-center  border border-[#ced4da] w-full">
@@ -66,10 +67,10 @@ const Dashboard = () => {
               className="outline-none focus-within:hover:outline-primary outline rounded-r rounded-tl w-full px-4 py-3 font-bold"
               name="asset"
               id="select_assetss"
-              required=""
+              required
             >
               <optgroup className="text-500" label="Currency">
-                <option selected="">EURUSD</option>
+                <option defaultValue>EURUSD</option>
                 <option>EURJPY</option>
                 <option>USDJPY</option>
                 <option>USDCAD</option>
@@ -116,8 +117,8 @@ const Dashboard = () => {
           </div>
 
           <div className="mb-[1rem] rounded-r rounded-tl outline-none focus-within:outline-primary outline flex flex- items-stretch relative border-[#ced4da] w-full">
-            <div class="flex text-left -mr-1">
-              <span class="bg-[#e9ecef] rounded-[0.25rem] text-[#495057] font-normal px-3 py-2.5 border leading-[1.5rem]">
+            <div className="flex text-left -mr-1">
+              <span className="bg-[#e9ecef] rounded-[0.25rem] text-[#495057] font-normal px-3 py-2.5 border leading-[1.5rem]">
                 USD
               </span>
             </div>
@@ -129,7 +130,7 @@ const Dashboard = () => {
               min="50"
               max="500000"
               className="w-full outline-0 appearance-auto bg-white flex-grow flex-shrink font-semibold overflow-clip px-4 text-start rounded-r py-3 border"
-              required=""
+              required
             />
           </div>
 
@@ -139,9 +140,9 @@ const Dashboard = () => {
               className="rounded-r outline-none focus-within:hover:outline-primary outline rounded-tl w-full px-4 py-3 font-bold"
               name="leverage"
               id="leverage"
-              required=""
+              required
             >
-              <option selected="" disable="" value="">
+              <option defaultValue disable="" value="">
                 Leverage
               </option>
               <option value="10">1:10</option>
@@ -165,7 +166,7 @@ const Dashboard = () => {
               id="expire"
               required=""
             >
-              <option selected="" disable="" value="">
+              <option defaultValue disable="" value="">
                 Expiration
               </option>
               <option value="1 Minutes">1 Minute</option>
@@ -191,7 +192,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="md:col-span-3 grid grid-cols-1 gap-8 md:grid-cols-2 text-[#212529] rounded-md ">
+        <div className="lg:col-span-3 grid grid-cols-1 gap-8 lg:grid-cols-2 text-[#212529] rounded-md ">
           <div className="col-span-1 text-[#212529]">
             <div className="bg-[#fff] rounded-md py-4 border">
               <div className="px-4 capitalize text-2xl font-bold">
@@ -218,14 +219,17 @@ const Dashboard = () => {
               <div className="flex items-center mt-2 px-5 w-full text-black">
                 <input
                   type="text"
-                  class="w-full border text-sm border-[#ced4da] border-r-0 rounded-tl-md text-[#495057] font-semibold px-3 py-3"
+                  className="w-full border text-sm border-[#ced4da] border-r-0 rounded-tl-md text-[#495057] font-semibold px-3 py-3"
                   placeholder="Link"
+                  readOnly
                   value="support@cressttrustinv.org/ref/300myles"
                 />
 
                 <button
-                  class="h-full rounded-r-md text-sm bg-[#ffc107] px-4 py-[13px]"
-                  onClick={() => "copyFunction('support@cressttrustinv.org/ref/300myles')"}
+                  className="h-full rounded-r-md text-sm bg-[#ffc107] px-4 py-[13px]"
+                  onClick={() =>
+                    copyFunction("support@cressttrustinv.org/ref/300myles")
+                  }
                 >
                   Copy
                 </button>
@@ -235,7 +239,7 @@ const Dashboard = () => {
             <div className="px-5 w-full bg-white mt-8 py-3">
               <div className="capitalize text-[27px] font-bold">referrals</div>
 
-              <div className=" text-black/50 text-sm md:text-md my-2">
+              <div className=" text-black/50 text-sm lg:text-md my-2">
                 Present our project to your friends, family, or any other
                 community and enjoy the financial benefits. You don't even need
                 an active deposit to receive affiliate commission.

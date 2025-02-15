@@ -1,12 +1,45 @@
 "use client";
+import { useUser } from "@/contexts/UserContext";
+import { makeTransaction } from "@/utils/app";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 
 const DepositsPage = () => {
+  const { setTransactions } = useUser();
   const searchParams = useSearchParams();
-  const emsg = searchParams.get("emsg")
-  console.log(emsg);
+  const [form, setForm] = useState({
+    name: "USDT",
+    amount: 0,
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const submit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+  
+    try {
+      const transaction = await makeTransaction({ ...form, type: "deposit" });
+  
+      if (transaction?.transaction) {
+        setTransactions((prevState) => [...prevState, transaction.transaction]);
+  
+        // Reset form only on success
+        setForm({
+          name: "USDT",
+          amount: 0,
+        });
+  
+        console.log("Transaction successful:", transaction);
+      } else {
+        console.warn("Transaction response missing expected data:", transaction);
+      }
+    } catch (error) {
+      console.error("Transaction failed:", error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };  
 
   return (
     <div className="w-full p-5 bg-[#f9f9f9] h-full text-black">
@@ -23,19 +56,17 @@ const DepositsPage = () => {
         <h3 className="mb-4 text-[2rem] mt-2 font-bold">
           Select Payment method
         </h3>
-        <form
-          className="w-full flex flex-col gap-5"
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-        >
+        <form className="w-full flex flex-col gap-5" onSubmit={submit}>
           <div className="w-full">
             <select
               className="w-full border py-3 outline-none focus:ring-2 focus:ring-[#000]-400 focus:shadow-[0_0_8px_rgba(0,0,0,0.9)]"
               name="payment_method"
-              required=""
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              required
             >
-              <option value="USDT">USDT</option>
+              <option defaultValue value="USDT">
+                USDT
+              </option>
               <option value="Litecoin">Litecoin</option>
               <option value="Ethereum">Ethereum</option>
               <option value="Bitcoin">Bitcoin</option>
@@ -49,20 +80,24 @@ const DepositsPage = () => {
               </span>
             </div>
             <input
-              type="number"
+              type="number" 
               name="amount"
+              onChange={(e) => setForm({ ...form, amount: e.target.value })}
               placeholder="Amount"
               id="IAmount"
               min="0"
               max="500000"
               className="w-full outline-none focus:ring-2 focus:ring-[#000]-400 focus:shadow-[0_0_8px_rgba(0,0,0,0.9)] appearance-auto bg-white flex-grow flex-shrink font-semibold overflow-clip px-4 text-start rounded-r py-3 border"
-              required=""
+              required
             />
           </div>
 
           <button
             type="submit"
-            className="border w-fit px-8 md:px-5 text-center py-2.5 uppercase text-sm md:text-[14px] text-white font-medium bg-[#FCB42D]"
+            disabled={!(form?.amount > 0) || isSubmitting}
+            className={`border w-fit px-8 lg:px-5 text-center py-2.5 uppercase text-sm lg:text-[14px] text-white font-medium bg-[#FCB42D] ${
+              (!(form?.amount > 0) || isSubmitting) && "opacity-70"
+            }`}
           >
             Continue
           </button>
