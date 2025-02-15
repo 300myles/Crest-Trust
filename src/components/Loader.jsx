@@ -22,7 +22,7 @@ const Loader = ({ isLoading }) => {
         animate={{ scale: [1, 1.2, 1] }}
         transition={{ repeat: Infinity }}
       >
-        <Image src="/assets/logo.png" alt="Loading logo" width={100} height={100} />
+        <Image src="/assets/logo.png" priority alt="Loading logo" width={100} height={100} />
       </motion.div>
     </div>
   );

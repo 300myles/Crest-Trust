@@ -109,6 +109,7 @@ const SideBar = () => {
       }`}
     >
       <Link
+        key={"iiiii"}
         className={`group text-[#333] font-medium flex items-center space-x-3 py-2 hover:text-[#FCB42D]`}
         href="/dashboard"
       >
@@ -125,9 +126,10 @@ const SideBar = () => {
               <div className="text-[#333] font-semibold text-lg py-2">
                 {title}
               </div>
-              {pages.map((i, index) => (
+              {pages.map((i, index) =>
                 i?.action ? (
-                  (<div key={index}
+                  <div
+                    key={index}
                     className={`group text-[#333] font-medium flex items-center space-x-3 py-2 hover:text-[#FCB42D]`}
                     onClick={() => setUser(null)}
                   >
@@ -135,17 +137,20 @@ const SideBar = () => {
                       <i.icon size={16} />
                     </span>
                     <span>{i?.label}</span>
-                  </div>)
-                ) :(<Link key={index}
-                  className={`group text-[#333] font-medium flex items-center space-x-3 py-2 hover:text-[#FCB42D]`}
-                  href={i?.href}
-                >
-                  <span className="border border-[#00000050] text-[#00000090] group-hover:text-[#FCB42D] w-8 h-8 flex items-center justify-center rounded-full group-hover:border-[#FCB42D]">
-                    <i.icon size={16} />
-                  </span>
-                  <span>{i?.label}</span>
-                </Link>)
-              ))}
+                  </div>
+                ) : (
+                  <Link
+                    key={index}
+                    className={`group text-[#333] font-medium flex items-center space-x-3 py-2 hover:text-[#FCB42D]`}
+                    href={i?.href}
+                  >
+                    <span className="border border-[#00000050] text-[#00000090] group-hover:text-[#FCB42D] w-8 h-8 flex items-center justify-center rounded-full group-hover:border-[#FCB42D]">
+                      <i.icon size={16} />
+                    </span>
+                    <span>{i?.label}</span>
+                  </Link>
+                )
+              )}
             </div>
           </>
         );

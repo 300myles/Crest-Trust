@@ -1,8 +1,11 @@
+"use client"
 import TradingViewWidget from "@/components/TradingViewWidget";
+import { useUser } from "@/contexts/UserContext";
 import Image from "next/image";
 import React from "react";
 
 const Dashboard = () => {
+  const {user} = useUser();
   return (
     <div className="w-full p-5 h-full">
       <div className="w-full grid grid-cols-1 gap-10 md:grid-cols-3">
@@ -50,7 +53,7 @@ const Dashboard = () => {
       </div>
 
       <div className="w-full border-[#ced4da] grid grid-cols-1 gap-8 mt-6 md:grid-cols-3">
-        <div className="md:col-span-2 h-full border">
+        <div className="md:col-span-2 h-96 md:h-full border">
           <TradingViewWidget />
         </div>
 
@@ -222,7 +225,7 @@ const Dashboard = () => {
 
                 <button
                   class="h-full rounded-r-md text-sm bg-[#ffc107] px-4 py-[13px]"
-                  onclick="copyFunction('support@cressttrustinv.org/ref/300myles')"
+                  onClick={() => "copyFunction('support@cressttrustinv.org/ref/300myles')"}
                 >
                   Copy
                 </button>

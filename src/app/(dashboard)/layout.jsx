@@ -8,7 +8,7 @@ import ProtectedRoute from "@/middleware/ProtectedRoute";
 import { useUser } from "@/contexts/UserContext";
 
 const DashboardLayout = ({ children }) => {
-  const { setSideNav, sideNav } = useUser();
+  const { setSideNav, sideNav, user } = useUser();
 
   return (
     <ProtectedRoute>
@@ -20,7 +20,7 @@ const DashboardLayout = ({ children }) => {
 
           <div className="hidden md:flex items-center space-x-3">
             <span className="text-white/80 text-lg font-semibold">
-              Hello, Emeka-Ugwu Kamsy Myles
+              Hello, {user?.name}
             </span>
             <Image
             alt=""
