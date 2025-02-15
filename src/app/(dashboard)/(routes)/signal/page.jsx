@@ -1,4 +1,4 @@
-import Link from "next/link";
+ju import Link from "next/link";
 import React from "react";
 
 const Plans = [
@@ -58,7 +58,7 @@ const SignalPage = () => {
 
       <p className="text-[2rem] font-bold">Make Deposit</p>
 
-      <div className="w-full grid grid-cols-4 gap-6 p-4 mt-3 rounded mb-5">
+        <div className="w-full grid-cols-1 sm:grid-coos-2 md:grid-cols-3 grid lg:grid-cols-4 gap-6 p-4 mt-3 rounded mb-5">
         {Plans &&
           Plans.map((plan) => (
             <div className="flex bg-white h-fit flex-col just text-center border">
