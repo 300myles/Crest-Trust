@@ -1,4 +1,4 @@
-ju import Link from "next/link";
+import Link from "next/link";
 import React from "react";
 
 const Plans = [
