@@ -40,7 +40,7 @@ const SupportPage = () => {
           <button
             type="submit"
             disabled={!message}
-            className{`w-full p-2 mt-12 bg-yellow hover:bg-blue-700 text-white text-sm ${
+            className={`w-full p-2 mt-12 bg-yellow hover:bg-blue-700 text-white text-sm ${
               !message && "opacity-70 cursor-not-allowed"
             }`}
           >
