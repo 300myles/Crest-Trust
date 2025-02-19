@@ -12,9 +12,6 @@ export async function GET(req) {
 
     // Ensure the user is an admin
     if (!user.adminId) {
-        console.log('====================================');
-        console.log(user);
-        console.log('====================================');
       return new Response(
         JSON.stringify({ message: "Unauthorized: Admin access required" }),
         { status: 403 }

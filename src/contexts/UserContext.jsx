@@ -56,9 +56,6 @@ export const UserProvider = ({ children }) => {
       const data = await getUserTransactions(); // Call the service function
       if (data) {
         setTransactions(data); // Set the user transactions in state
-        console.log("====================================");
-        console.log(transactions);
-        console.log("====================================");
       } else {
         setTransactions([]); // If the user does not exist
       }
@@ -145,6 +142,7 @@ export const UserProvider = ({ children }) => {
         setAdmin,
         isLoading,
         setTransactions,
+        transactions,
         logout,
         sideNav,
         setSideNav,

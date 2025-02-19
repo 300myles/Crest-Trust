@@ -1,5 +1,5 @@
+import authMiddleware from "@/lib/auth";
 import dbConnect from "@/lib/mongodb";
-import { authMiddleware } from "@/lib/auth";
 import Transactions from "@/models/Transactions";
 import User from "@/models/User";
 
@@ -14,7 +14,7 @@ export async function POST(req) {
     // Parse request body
     const { name, amount, type } = await req.json();
 
-    if (!name || !amount || !type || !description) {
+    if (!name || !amount || !type) {
       return new Response(
         JSON.stringify({ message: "All fields are required" }),
         { status: 400 }

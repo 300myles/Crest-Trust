@@ -32,14 +32,9 @@ export default function LoginPage() {
         body: JSON.stringify(formData),
       });
       const data = await response.json();
-
-      console.log("data", data);
       if (response.ok) {
         setUser(data);
         router.replace("/dashboard");
-        console.log("====================================");
-        console.log("headers", response.headers);
-        console.log("====================================");
       }
     } catch (error) {
       console.error(error);

@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 
 const DepositsPage = () => {
-  const { setTransactions } = useUser();
+  const { setTransactions, transactions } = useUser();
   const searchParams = useSearchParams();
   const [form, setForm] = useState({
     name: "USDT",
@@ -22,15 +22,13 @@ const DepositsPage = () => {
       const transaction = await makeTransaction({ ...form, type: "deposit" });
   
       if (transaction?.transaction) {
-        setTransactions((prevState) => [...prevState, transaction.transaction]);
+        setTransactions((prevState) => [...transactions, transaction.transaction]);
   
         // Reset form only on success
         setForm({
           name: "USDT",
           amount: 0,
         });
-  
-        console.log("Transaction successful:", transaction);
       } else {
         console.warn("Transaction response missing expected data:", transaction);
       }

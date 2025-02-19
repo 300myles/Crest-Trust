@@ -6,7 +6,6 @@ const AccountHistoryPage = () => {
   const searchParams = useSearchParams();
   const emsg = searchParams.get("emsg");
   const [selected, setSelected] = useState("deposit");
-  console.log(emsg);
 
   return (
     <div className="w-full p-5 bg-[#f9f9f9] h-full text-black">

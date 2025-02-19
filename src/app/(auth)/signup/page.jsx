@@ -37,8 +37,6 @@ export default function SingupPage() {
         body: JSON.stringify(formData),
       });
       const data = await response.json();
-      
-      console.log("data", data);
 
       if (response.ok) {
         router.replace("/login");
@@ -213,7 +211,6 @@ export default function SingupPage() {
                 placeholder="Enter your email"
                 onChange={(e) => {
                   setFormData({ ...formData, dob: e.target.value });
-                  console.log(e.target.value);
                 }}
                 id="dob"
                 name="dob"

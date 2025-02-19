@@ -71,9 +71,7 @@ export async function makeTransaction(form) {
   try {
     const response = await fetch(`/api/transactions/create`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      credentials: "include",
       body: JSON.stringify(form),
     });
 
