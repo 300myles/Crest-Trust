@@ -1,12 +1,13 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getUserProfile, getUserTransactions, logoutUser } from "@/utils/app";
+import { getAdmin, getUserProfile, getUserTransactions, logoutUser } from "@/utils/app";
 
 const UserContext = createContext(undefined);
 
 export const UserProvider = ({children}) => {
   const [user, setUser] = useState(null);
+  const [admin, setAdmin] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [sideNav, setSideNav] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -20,6 +21,21 @@ export const UserProvider = ({children}) => {
         setUser(data); // Set the user data in state
       } else {
         setUser(null); // If the user is not authenticated
+      }
+    } catch (error) {
+      console.error("Failed to fetch user profile:", error);
+    } finally {
+      setIsLoading(false); // Make sure loading is set to false after the fetch
+    }
+  };
+
+  const fetchAdmin = async () => {
+    try {
+      const data = await getAdmin(); // Call the service function
+      if (data) {
+        setAdmin(data); // Set the user data in state
+      } else {
+        setAdmin(null); // If the user is not authenticated
       }
     } catch (error) {
       console.error("Failed to fetch user profile:", error);
@@ -49,6 +65,7 @@ export const UserProvider = ({children}) => {
   // Initial fetch
   useEffect(() => {
     fetchUser();
+    fetchAdmin();
   }, []);
 
   // fetch after user state updates
@@ -72,7 +89,7 @@ export const UserProvider = ({children}) => {
 
   return (
     <UserContext.Provider
-      value={{ user, setUser, isLoading, setTransactions, logout, sideNav, setSideNav, refreshUser: fetchUser }}
+      value={{ user, setUser, admin, setAdmin, isLoading, setTransactions, logout, sideNav, setSideNav, refreshUser: fetchUser }}
     >
       {children}
     </UserContext.Provider>

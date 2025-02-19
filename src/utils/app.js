@@ -21,6 +21,29 @@ export async function getUserProfile() {
   }
 }
 
+// Fetch user profile data from the backend
+export async function getAdmin() {
+  try {
+    const response = await fetch(
+      `/api/admin/profile`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    throw error;
+  }
+}
+
 // Fetch user transactions data from the backend
 export async function getUserTransactions() {
   try {
