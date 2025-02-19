@@ -1,12 +1,19 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getAdmin, getUserProfile, getUserTransactions, logoutUser } from "@/utils/app";
+import {
+  getAdmin,
+  getUserProfile,
+  getUserTransactions,
+  logoutUser,
+} from "@/utils/app";
 
 const UserContext = createContext(undefined);
 
-export const UserProvider = ({children}) => {
+export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [allUsers, setAllUsers] = useState([]);
+  const [allTransactions, setAllTransactions] = useState([]);
   const [admin, setAdmin] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [sideNav, setSideNav] = useState(false);
@@ -44,14 +51,14 @@ export const UserProvider = ({children}) => {
     }
   };
 
-  const fetchTransactions = async () => {
+  const fetchUserTransactions = async () => {
     try {
       const data = await getUserTransactions(); // Call the service function
       if (data) {
         setTransactions(data); // Set the user transactions in state
-        console.log('====================================');
+        console.log("====================================");
         console.log(transactions);
-        console.log('====================================');
+        console.log("====================================");
       } else {
         setTransactions([]); // If the user does not exist
       }
@@ -60,7 +67,50 @@ export const UserProvider = ({children}) => {
     } finally {
       setIsLoading(false); // Make sure loading is set to false after the fetch
     }
-  }
+  };
+
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch("/api/admin/users", {
+        method: "GET",
+        credentials: "include",
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setAllUsers(data?.data);
+      } else {
+        console.error("Error fetching users:", data.message);
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+    }
+  };
+
+  const fetchTransactions = async () => {
+    try {
+      const response = await fetch("/api/admin/transactions", {
+        method: "GET",
+        credentials: "include",
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setAllTransactions(data?.data);
+      } else {
+        console.error("Error fetching transactions:", data.message);
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (admin) {
+      fetchUsers();
+      fetchTransactions();
+    }
+  }, [admin]);
 
   // Initial fetch
   useEffect(() => {
@@ -70,7 +120,7 @@ export const UserProvider = ({children}) => {
 
   // fetch after user state updates
   useEffect(() => {
-    if (user) fetchTransactions();
+    if (user) fetchUserTransactions();
   }, [user]);
 
   // Handle logout using the service function
@@ -86,15 +136,29 @@ export const UserProvider = ({children}) => {
     }
   };
 
-
   return (
     <UserContext.Provider
-      value={{ user, setUser, admin, setAdmin, isLoading, setTransactions, logout, sideNav, setSideNav, refreshUser: fetchUser }}
+      value={{
+        user,
+        setUser,
+        admin,
+        setAdmin,
+        isLoading,
+        setTransactions,
+        logout,
+        sideNav,
+        setSideNav,
+        refreshUser: fetchUser,
+        setAllUsers,
+        setAllTransactions,
+        allUsers,
+        allTransactions,
+      }}
     >
       {children}
     </UserContext.Provider>
   );
-}
+};
 
 // Create a hook to use the UserContext
 export const useUser = () => {

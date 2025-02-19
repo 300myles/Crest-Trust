@@ -2,6 +2,7 @@
 import { Users } from "lucide-react";
 import Card from "@/components/Card";
 import { useEffect, useState } from "react";
+import { useUser } from "@/contexts/UserContext";
 
 const uesrSalesData = [
   {
@@ -32,7 +33,7 @@ const uesrSalesData = [
 ];
 
 export default function Home() {
-  const [users, setUsers] = useState([]);
+  const { setAllUsers, setAllTransactions, allUsers, allTransactions, admin } = useUser();
   const [transactions, setTransactions] = useState([]);
 
   // Helper functions to calculate users created today and this week
@@ -57,35 +58,20 @@ export default function Home() {
     };
   };
 
-  const fetchUsers = async () => {
-    const users = await getUsers();
-    setUsers(users.result);
-  };
-
-  const fetchTransactions = async () => {
-    const transactions = await getTransactions();
-    setTransactions(transactions.result);
-  };
-
-  useEffect(() => {
-    fetchUsers();
-    fetchTransactions();
-  }, []);
-
   // Calculate stats for users and coaches
-  const userStats = calculateDateStats(users);
-  const transactionStats = calculateDateStats(transactions);
+  const userStats = calculateDateStats(allUsers);
+  const transactionStats = calculateDateStats(allTransactions);
 
   const cardData = [
     {
       label: "All Users",
-      amount: `${users ? users.length : 0}`,
+      amount: `${allUsers ? allUsers.length : 0}`,
       discription: `+${userStats.todayCount} today - +${userStats.weekCount} this week`,
       icon: Users,
     },
     {
       label: "Transactions",
-      amount: `${transactions ? transactions.length : 0}`,
+      amount: `${allTransactions ? allTransactions.length : 0}`,
       discription: `+${transactionStats.todayCount} today - +${transactionStats.weekCount} this week`,
       icon: Users,
     },
