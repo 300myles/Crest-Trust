@@ -5,9 +5,11 @@ import { MdArrowBack, MdNotes } from "react-icons/md";
 import CustomButton from "./CustomButton";
 import { Sidebar } from "./AdminSideBar";
 import { useState } from "react";
+import { useUser } from "@/contexts/UserContext";
 
 const AdminNav = () => {
   const router = useRouter();
+  const {admin} = useUser();
   const [isMounted, setIsMounted] = useState(false);
   return (
     <div className="flex items-center p-4">
@@ -35,7 +37,7 @@ const AdminNav = () => {
           <MdArrowBack size={24} color="#fcb42d" />
         </button>
 
-        <div className="cursor-pointer italic font-semibold">admin@cresttrust.com</div>
+        <div className="cursor-pointer italic font-semibold">{admin?.email}</div>
       </div>
     </div>
   );

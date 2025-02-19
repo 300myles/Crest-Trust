@@ -11,7 +11,7 @@ const ProtectedAdminAuth = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && !admin) {
+    if (!loading && admin) {
       router.push("/admin/dashboard"); // Redirect to login if admin is not authenticated
     }
   }, [admin, loading, router]);

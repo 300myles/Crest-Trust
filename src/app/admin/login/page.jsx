@@ -11,7 +11,7 @@ import { useUser } from "@/contexts/UserContext";
 
 export default function LoginPage() {
   const router = useRouter();
-  const {setUser} = useUser();
+  const {setAdmin} = useUser();
   const [formData, setFormData] = useState({
     email: "",
     pwd: "",
@@ -24,7 +24,7 @@ export default function LoginPage() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`/api/auth/login`, {
+      const response = await fetch(`/api/admin/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,7 +35,7 @@ export default function LoginPage() {
 
       console.log("data", data);
       if (response.ok) {
-        setUser(data);
+        setAdmin(data);
         router.replace("/dashboard");
         console.log("====================================");
         console.log("headers", response.headers);
