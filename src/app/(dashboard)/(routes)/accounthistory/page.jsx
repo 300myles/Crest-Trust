@@ -1,10 +1,12 @@
 "use client";
+import { useUser } from "@/contexts/UserContext";
 import { useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 
 const AccountHistoryPage = () => {
   const searchParams = useSearchParams();
   const emsg = searchParams.get("emsg");
+  const { transactions } = useUser();
   const [selected, setSelected] = useState("deposit");
 
   return (
@@ -74,31 +76,62 @@ const AccountHistoryPage = () => {
             </thead>
 
             <tbody>
-              <tr className="border-b-2 grid grid-cols-4 items-center border-gray-300 ">
-                <td className="px-4 py-2">
-                  <span className="block px-2 py-1 text-md text-center font-semibold text-[#333]">
-                    &#x20A6;100
-                  </span>
-                </td>
+              {[...transactions]
+                .sort((a, b) => (a.status === "pending" ? -1 : 1)) // Sort pending transactions first
+                .map((tr) => (
+                  <tr
+                    key={tr._id}
+                    className="border-b-2 grid grid-cols-4 items-center border-gray-300"
+                  >
+                    {/* Amount */}
+                    <td className="px-4 py-2">
+                      <span className="block px-2 py-1 text-md text-center font-semibold text-[#333]">
+                        &#x20A6;{tr?.amount}
+                      </span>
+                    </td>
 
-                <td className="px-4 py-2">
-                  <span className="block items-center px-2 py-1 text-md text-center font-semibold text-[#333]">
-                    <i className="fas fa-university mr-1"></i> Litecoin
-                  </span>
-                </td>
+                    {/* Name */}
+                    <td className="px-4 py-2">
+                      <span className="block items-center px-2 py-1 text-md text-center font-semibold text-[#333]">
+                        <i className="fas fa-university mr-1"></i> {tr?.name}
+                      </span>
+                    </td>
 
-                <td className="px-4 text-center py-2">
-                  <span className="inline-flex text-center self-center px-2 py-1 text-xs font-semibold text-white bg-yellow rounded">
-                    <i className="fas fa-university mr-1"></i> Pending
-                  </span>
-                </td>
+                    {/* Status Badge with Conditional Styling */}
+                    <td className="px-4 text-center py-2">
+                      <span
+                        className={`inline-flex text-center self-center px-2 py-1 text-xs font-semibold text-white capitalize rounded ${
+                          tr?.status === "pending"
+                            ? "bg-yellow"
+                            : tr?.status === "successful"
+                            ? "bg-green-500"
+                            : "bg-red-500"
+                        }`}
+                      >
+                        <i className="fas fa-university mr-1"></i> {tr?.status || "failed"}
+                      </span>
+                    </td>
 
-                <td className="px-4 py-2">
-                  <span className="block text-gray-500 text-sm">
-                    Wed, Jan 15, 2025 2:01 AM
-                  </span>
-                </td>
-              </tr>
+                    {/* Formatted Date */}
+                    <td className="px-4 py-2">
+                      <span className="block text-gray-500 text-sm">
+                        {new Date(tr?.createdAt || tr?.date).toLocaleString(
+                          "en-US",
+                          {
+                            weekday: "short",
+                            month: "short",
+                            day: "2-digit",
+                            year: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                            hour12: true,
+                          }
+                        )}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         )}

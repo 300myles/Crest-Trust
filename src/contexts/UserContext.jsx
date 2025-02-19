@@ -55,7 +55,11 @@ export const UserProvider = ({ children }) => {
     try {
       const data = await getUserTransactions(); // Call the service function
       if (data) {
-        setTransactions(data); // Set the user transactions in state
+        setTransactions(data?.data); // Set the user transactions in state
+
+        console.log('====================================');
+        console.log(data?.data);
+        console.log('====================================');
       } else {
         setTransactions([]); // If the user does not exist
       }
