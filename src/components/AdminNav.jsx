@@ -15,13 +15,13 @@ const AdminNav = () => {
     <div className="flex items-center p-4">
       <div
         onClick={() => setIsMounted(!isMounted)}
-        className="md:hidden text-2xl font-bold px-3 py-3 bg-[#f5f5f5] rounded-full text-yellow"
+        className="md:hidde z-40 text-2xl font-bold px-3 py-3 bg-[#f5f5f5] rounded-full text-yellow"
       >
         <MdNotes />
       </div>
 
       <div
-        className={`fixed z-40 inset-0 bg-transparent hidden ${isMounted && "flex"}`}
+        className={`fixed z-40 flex inset-0 bg-transparent ${!isMounted && "hidden"}`}
       >
         <div className="w-4/5 h-full">
           <Sidebar />
